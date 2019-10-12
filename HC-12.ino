@@ -11,7 +11,7 @@ void setup() {
 void loop() { // run over and over
   if (mySerial.available()) {
     String answer = mySerial.readString();
-    Serial.println(answer);
+    Serial.println(answer);//////
     if (answer.substring(0,3) == "888") {
         Serial.println(answer);
       }
