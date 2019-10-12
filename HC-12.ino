@@ -2,6 +2,8 @@
 
 SoftwareSerial mySerial(10, 11); // RX, TX
 
+String command_line;
+
 void setup() {
   Serial.begin(9600);
 
@@ -10,13 +12,15 @@ void setup() {
 
 void loop() { // run over and over
   if (mySerial.available()) {
-    String answer = mySerial.readString();
-    Serial.println(answer);
-    if (answer.substring(0,3) == "888") {
-        Serial.println(answer);
+    char c = mySerial.read();
+    command_line += c;
+
+    if (c == '\n') {
+      Serial.println(command_line);
+      command_line = "";
       }
   }
   if (Serial.available()) {
-    mySerial.println(Serial.readString());
+    mySerial.write(Serial.read());
   }
 }
