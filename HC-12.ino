@@ -3,6 +3,7 @@
 SoftwareSerial mySerial(10, 11); // RX, TX
 
 int ID = 1111;
+bool onReTrans = false;
 
 String command_line;
 
@@ -20,10 +21,15 @@ void loop() { // run over and over
  
   if(mySerial.available() > 1){
     String input = mySerial.readString();
-    int recieveID = input.parseInt();
+    int recieveID = input.toInt();
 
-    if (recieveID == ID) {
+    if (recieveID == ID && !onReTrans) {
       digitalWrite(3,HIGH);
+      }
+    else {
+      mySerial.println(recieveID);
+      digitalWrite(3,LOW);
+      onReTrans = true;
       }
     Serial.println(input);    
   }
