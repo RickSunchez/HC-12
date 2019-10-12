@@ -11,16 +11,14 @@ void setup() {
 }
 
 void loop() { // run over and over
-  if (mySerial.available()) {
-    char c = mySerial.read();
-    command_line += c;
-
-    if (c == '\n') {
-      Serial.println(command_line);
-      command_line = "";
-      }
+  if(Serial.available() > 0){
+    String input = Serial.readString();
+    mySerial.println(input);    
   }
-  if (Serial.available()) {
-    mySerial.write(Serial.read());
+ 
+  if(mySerial.available() > 1){
+    String input = mySerial.readString();
+    Serial.println(input);    
   }
+  delay(20);
 }
