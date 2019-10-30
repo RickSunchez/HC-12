@@ -5,26 +5,36 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 short ID = 44;
 short currentQuery = 0;
 bool callbackWait = false;
-//int recieveID = 0;
-//bool onRT = false;
+short switchPin = 4;
+short LEDpin = 3;
 
 String command_line;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(3, OUTPUT);
+  pinMode(LEDpin, OUTPUT);
+  pinMode(switchPin, INPUT);
   mySerial.begin(9600);
 }
 
 void loop() { // run over and over
+  if(digitalRead(switchPin) == HIGH) {
+    digitalWrite(LEDpin, HIGH);
+    //881122345555
+    String out = "88" + String(ID) + "11" + "4" + "0" + "0000";
+    mySerial.println(out);
+    delay(1000);
+    } else {
+    digitalWrite(LEDpin, LOW);
+    }
+  
   if(Serial.available() > 0){
     String input = Serial.readString();
     String query = "88" + String(ID) + input + "0" + random(1, 999);
     if (input.substring(2).toInt() == 1) {
-      //Serial.println("Wait callback");
       callbackWait = true;
       }
-    //Serial.println(query);
+    
     mySerial.println(query);   
   }
  
@@ -41,8 +51,8 @@ void loop() { // run over and over
         currentQuery = qID; //SAVE CURRENT QUERY
         
         if (toID == ID) {
-            if (comm == 0) digitalWrite(3,LOW);
-            if (comm == 2 || comm == 1) digitalWrite(3,HIGH);
+            if (comm == 0) digitalWrite(LEDpin,LOW);
+            if (comm == 2 || comm == 1) digitalWrite(LEDpin,HIGH);
             if (comm == 1) {
               String callback = "88" + String(ID) + String(fromID) + String(3) + String(random(999, 9999));
               mySerial.println(callback);
@@ -77,6 +87,7 @@ void loop() { // run over and over
 // * 0 - light off
 // * 2 - light on
 // * 3 - finded!
+// * 4 - registration
 // 4 - retranslate:
 // * 0 - false
 // * 1 - true
